@@ -48,40 +48,40 @@ const TopBar = ({ styles }) => {
         {/* Fixed tooltip */}
         <span
           className="
-    absolute 
-    top-[90%] 
-    left-1/2 
-    transform 
-    -translate-x-1/2 
-    -translate-y-1 
-    px-2 
-    py-1 
-    text-xs 
-    text-white 
-    bg-black 
-    rounded 
-    opacity-0 
-    group-hover:opacity-100 
-    transition-opacity 
-    duration-300 
-    whitespace-nowrap
-    z-50
-    pointer-events-none
-  "
+            absolute 
+            top-[90%] 
+            left-1/2 
+            transform 
+            -translate-x-1/2 
+            -translate-y-1 
+            px-2 
+            py-1 
+            text-xs 
+            text-white 
+            bg-black 
+            rounded 
+            opacity-0 
+            group-hover:opacity-100 
+            transition-opacity 
+            duration-300 
+            whitespace-nowrap
+            z-50
+            pointer-events-none
+            "
         >
           Change Theme
           <span
             className="
-      absolute 
-      bottom-full 
-      left-1/2 
-      transform 
-      -translate-x-[60%]
-       rotate-180
-      border-4 
-      border-transparent 
-      border-t-black
-    "
+            absolute 
+            bottom-full 
+            left-1/2 
+            transform 
+            -translate-x-[60%]
+            rotate-180
+            border-4 
+            border-transparent 
+            border-t-black
+            "
           ></span>
         </span>
       </div>

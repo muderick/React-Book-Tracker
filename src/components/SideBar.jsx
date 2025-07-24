@@ -35,18 +35,66 @@ const SideBar = () => {
         </ul>
       </nav>
 
-      <button
-        onClick={toggleTheme}
-        title="Change Theme"
-        className={`mt-10 w-full px-4 py-2 rounded-full text-sm font-semibold transition-colors 
-          ${
-            theme === "light"
-              ? "bg-gray-300 text-gray-800 hover:bg-gray-400"
-              : "bg-gray-700 text-white hover:bg-gray-600"
-          }`}
-      >
-        <FontAwesomeIcon icon="fa-regular fa-moon" />
-      </button>
+      <div className="relative group inline-block">
+        {theme === "light" ? (
+          <FontAwesomeIcon
+            onClick={toggleTheme}
+            title="Change Theme"
+            icon="fa-regular fa-moon"
+            className="w-6 h-6 hover:cursor-pointer"
+          />
+        ) : (
+          <FontAwesomeIcon
+            onClick={toggleTheme}
+            title="Change Theme"
+            icon="fa-regular fa-sun"
+            className="w-6 h-6 hover:cursor-pointer"
+          />
+        )}
+
+        {/* Fixed tooltip */}
+        <span
+          className={`  
+                ${
+                  theme === "light"
+                    ? "bg-black text-white"
+                    : "bg-gray-600 text-gray-100"
+                }
+                  absolute 
+                  bottom-full
+                  left-1/4 
+                  transform 
+                  -translate-x-1/2 
+                  -translate-y-1 
+                  px-2 
+                  py-1 
+                  text-xs 
+                  text-white 
+                  rounded 
+                  opacity-0 
+                  group-hover:opacity-100 
+                  transition-opacity 
+                  duration-300 
+                  whitespace-nowrap
+                  z-50
+                  pointer-events-none
+                  `}
+        >
+          Change Theme
+          <span
+            className="
+                  absolute 
+                  top-full 
+                  left-[10px] 
+                  transform 
+                  -translate-x-[60%]
+                  border-4 
+                  border-transparent 
+                  border-t-black
+                  "
+          ></span>
+        </span>
+      </div>
     </aside>
   );
 };
