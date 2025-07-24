@@ -1,13 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import "antd/dist/reset.css";
+import { ThemeProvider } from "./context/useTheme";
+import "@ant-design/v5-patch-for-react-19";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faMoon, faSun } from "@fortawesome/free-regular-svg-icons";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+library.add(faMoon, faSun);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>
 );
 

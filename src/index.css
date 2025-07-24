@@ -1,13 +1,144 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* For dark mode table rows */
+.dark-modal .ant-modal-title {
+  color: #f9fafb !important;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Table header/text colors */
+.ant-table-thead > tr > th {
+  color: inherit !important;
+}
+
+.ant-table-tbody > tr > td {
+  color: inherit !important;
+  border-bottom: 1px solid var(--border-color) !important;
+}
+
+/* Pagination styling */
+.ant-pagination-item,
+.ant-pagination-prev,
+.ant-pagination-next,
+.ant-pagination-jump-prev,
+.ant-pagination-jump-next {
+  background: transparent !important;
+  border-color: var(--border-color) !important;
+}
+
+.ant-pagination-item a,
+.ant-pagination-item-link {
+  color: inherit !important;
+}
+
+.dark .ant-pagination-item {
+  background-color: transparent !important;
+  border-color: #4b5563 !important; /* Tailwind gray-600 */
+}
+
+.dark .ant-pagination-item a {
+  color: #d1d5db !important; /* Tailwind gray-300 */
+}
+
+.dark .ant-pagination-item-active {
+  background-color: #2563eb !important; /* Tailwind blue-600 */
+  border-color: #2563eb !important;
+}
+
+.dark .ant-pagination-item-active a {
+  color: white !important;
+}
+
+.dark .ant-pagination-prev,
+.dark .ant-pagination-next,
+.dark .ant-pagination-jump-prev,
+.dark .ant-pagination-jump-next {
+  background-color: transparent !important;
+  border-color: #4b5563 !important;
+}
+
+.dark .ant-pagination-item-link {
+  color: #d1d5db !important;
+  background-color: transparent !important;
+  border-color: #4b5563 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+.ant-input::placeholder {
+  color: #9ca3af !important;
+}
+
+.dark .ant-table-tbody > tr:hover > td {
+  background-color: #374151 !important;
+}
+
+.dark .ant-table-thead > tr > th {
+  background-color: #1f2937 !important; /* Tailwind gray-800 */
+  color: #f3f4f6 !important; /* Tailwind gray-100 */
+}
+
+.dark-modal .ant-modal-title {
+  color: #f9fafb !important;
+}
+
+.dark-modal .ant-modal-header {
+  background-color: #1f2937 !important;
+  border-bottom: 1px solid #374151 !important;
+}
+
+.dark .ant-table-tbody > tr > td,
+.dark .ant-table-thead > tr > th {
+  color: #f9fafb !important;
+}
+
+.light .ant-table-tbody > tr > td,
+.light .ant-table-thead > tr > th {
+  color: #1f2937 !important;
+}
+
+.dark .ant-input-clear-icon {
+  color: #d1d5db !important; /* Tailwind gray-300 */
+}
+
+.dark .ant-modal-close {
+    color: #d1d5db !important;
+}
+
+.dark .ant-input-affix-wrapper, .dark .ant-btn {
+    color: #f9fafb !important;
+    background: #1f2937 !important;
+}
+
+.dark .ant-table-column-sorter {
+  background: transparent !important;
+}
+
+.dark .ant-table-column-sorter-up.active, 
+.dark .ant-table-column-sorter-down.active {
+  color: #3b82f6 !important; /* Active sorter icon color */
+}
+
+.dark .ant-table-column-sorter-up:not(.active):hover, 
+.dark .ant-table-column-sorter-down:not(.active):hover {
+  color: #9ca3af !important; /* Hover color */
+}
+
+.dark .ant-table-column-sorter-inner {
+  color: #6b7280 !important; /* Default sorter icon color */
+}
+
+/* Fix sorter icons in light mode */
+.light .ant-table-column-sorter-inner {
+  color: #4b5563 !important; /* Default sorter icon color */
+}
+
+/* Fix sorter background specifically */
+.dark .ant-table-thead th.ant-table-column-has-sorters {
+  background-color: #1f2937 !important; /* Match your dark header bg */
+}
+
+.dark .ant-table-thead th.ant-table-column-has-sorters:hover {
+  background-color: #374151 !important; /* Match your hover color */
 }

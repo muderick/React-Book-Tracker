@@ -1,70 +1,109 @@
-# Getting Started with Create React App
+# Book Tracker App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern book tracking application built with React, Tailwind CSS, and Ant Design, allowing users to:
 
-## Available Scripts
+* Search for books using the Google Books API
+* Add books to a local list
+* Edit and delete saved books
+* Persist books in localStorage
+* Filter and sort books by title or author
+* Focus input with useRef, and manage global UI state
 
-In the project directory, you can run:
+## Live Demo
 
-### `npm start`
+[View Demo](https://react-book-tracker.vercel.app)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Features
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+* Google Books API Integration – Search books by title or keyword
+* Local Book List – Add books from API or manually
+* Editable Book Modal – Add or update title and authors via a custom modal
+* Focus Management – Uses useRef to auto-focus input on modal open
+* Custom Hooks – Modular useFetch, usePost, useUpdate, useDelete
+* Persistent Data – Saves books in localStorage
+* Filterable List – Search by title or author in real time
+* Sortable Columns – Sort books by title or authors
+* Paginated Results – Ant Design table with pagination
 
-### `npm test`
+## Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Tool             | Purpose                              |
+| ---------------- | ------------------------------------ |
+| React            | Frontend framework                   |
+| Tailwind CSS     | Utility-first styling                |
+| Ant Design       | UI Components (Table, Input, Layout) |
+| Google Books API | Search functionality                 |
+| localStorage     | Persistent state                     |
+| React Hooks      | useState, useEffect, useRef          |
 
-### `npm run build`
+## Screenshots
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+(Optional: Add some screenshots here or gifs of your UI)
+You can use Carbon or Loom to capture snippets.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Getting Started
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clone the repo
 
-### `npm run eject`
+```bash
+git clone https://github.com/muderick/book-tracker.git
+cd book-tracker
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Install dependencies
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm install
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. Run the app
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm start
+```
 
-## Learn More
+The app will open at [http://localhost:3000](http://localhost:3000)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Folder Structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+src/
+├── components/
+│   └── BookTable.jsx
+│   └── FooterComponent.jsx
+│   └── HeaderComponent.jsx
+│   └── SideBar.jsx
+│   └── TopBar.jsx
+├── hooks/
+│   ├── useFetch.js
+│   ├── usePost.js
+│   ├── useUpdate.js
+│   └── useDelete.js
+├── views/
+│   └── About.jsx
+│   └── Home.jsx
+│   └── Layout.jsx
+│   └── NotFound.jsx
+├── App.jsx
+└── index.js
+```
 
-### Code Splitting
+## Future Improvements
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+* Mark books as read/unread
+* Tag books with categories
+* Firebase or Supabase integration for real user data
+* Export books to PDF or CSV
 
-### Analyzing the Bundle Size
+## Contributing
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Contributions, feedback, and ideas are welcome. Feel free to fork the repo and submit a pull request.
 
-### Making a Progressive Web App
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+MIT
 
-### Advanced Configuration
+## Contact
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Built by Mumia Derick
+GitHub: [https://github.com/muderick](https://github.com/muderick)
