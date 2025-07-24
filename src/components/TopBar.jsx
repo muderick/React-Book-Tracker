@@ -16,8 +16,8 @@ const TopBar = ({ styles }) => {
       {/* Logo - Optional */}
       <div className="text-xl font-bold tracking-tight">
         <span
-          className={`bg-clip-text text-transparent bg-gradient-to-r ${
-            isDark ? "from-cyan-400 to-blue-500" : "from-cyan-600 to-blue-700"
+          className={`text-2xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r ${
+            isDark ? "from-gray-300 to-gray-500" : "from-gray-800 to-gray-600"
           }`}
         >
           BookApp
