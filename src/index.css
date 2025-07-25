@@ -21,12 +21,10 @@ body {
   color: var(--color-dark-500);
 }
 
-/* For dark mode table rows */
 .dark-modal .ant-modal-title {
   color: #f9fafb !important;
 }
 
-/* Table header/text colors */
 .ant-table-thead > tr > th {
   color: inherit !important;
 }
@@ -53,15 +51,15 @@ body {
 
 .dark .ant-pagination-item {
   background-color: transparent !important;
-  border-color: #4b5563 !important; /* Tailwind gray-600 */
+  border-color: #4b5563 !important; 
 }
 
 .dark .ant-pagination-item a {
-  color: #d1d5db !important; /* Tailwind gray-300 */
+  color: #d1d5db !important; 
 }
 
 .dark .ant-pagination-item-active {
-  background-color: #2563eb !important; /* Tailwind blue-600 */
+  background-color: #2563eb !important;
   border-color: #2563eb !important;
 }
 
@@ -98,8 +96,8 @@ textarea::placeholder {
 }
 
 .dark .ant-table-thead > tr > th {
-  background-color: #1f2937 !important; /* Tailwind gray-800 */
-  color: #f3f4f6 !important; /* Tailwind gray-100 */
+  background-color: #1f2937 !important; 
+  color: #f3f4f6 !important; 
 }
 
 .dark-modal .ant-modal-title {
@@ -122,7 +120,7 @@ textarea::placeholder {
 }
 
 .dark .ant-input-clear-icon {
-  color: #d1d5db !important; /* Tailwind gray-300 */
+  color: #d1d5db !important; 
 }
 
 .dark .ant-modal-close {
@@ -141,7 +139,7 @@ textarea::placeholder {
 
 .dark .ant-table-column-sorter-up.active,
 .dark .ant-table-column-sorter-down.active {
-  color: #3b82f6 !important; /* Active sorter icon color */
+  color: #3b82f6 !important;
 }
 
 .dark .ant-table-column-sorter-up:not(.active):hover,
@@ -150,42 +148,39 @@ textarea::placeholder {
 }
 
 .dark .ant-table-column-sorter-inner {
-  color: #6b7280 !important; /* Default sorter icon color */
+  color: #6b7280 !important; 
 }
 
-/* Fix sorter icons in light mode */
+/* Sorter icons in light mode */
 .light .ant-table-column-sorter-inner {
-  color: #4b5563 !important; /* Default sorter icon color */
+  color: #4b5563 !important; 
 }
 
-/* Fix sorter background specifically */
 .dark .ant-table-thead th.ant-table-column-has-sorters {
-  background-color: #1f2937 !important; /* Match your dark header bg */
+  background-color: #1f2937 !important; 
 }
 
 .dark .ant-table-thead th.ant-table-column-has-sorters:hover {
-  background-color: #374151 !important; /* Match your hover color */
+  background-color: #374151 !important;
 }
 
 .dark .ant-table-thead > tr > th.ant-table-column-sort {
-  background-color: #2d3748 !important; /* Slightly lighter than main bg */
+  background-color: #2d3748 !important; 
 }
 
 .dark .ant-table-thead > tr > th.ant-table-column-sort:hover {
-  background-color: #3c4557 !important; /* Hover state */
+  background-color: #3c4557 !important; 
 }
 
 .dark .ant-table-tbody .ant-table-cell.ant-table-column-sort {
     background-color: #2d3748;
 }
 
-/* Active sorted column icon color */
 .dark .ant-table-column-sorter-up.active,
 .dark .ant-table-column-sorter-down.active {
-  color: #63b3ed !important; /* Light blue for better contrast */
+  color: #63b3ed !important; 
 }
 
-/* Fix sorted column text color */
 .dark .ant-table-column-sort .ant-table-cell {
-  color: #e2e8f0 !important; /* Light text for better contrast */
+  color: #e2e8f0 !important; 
 }

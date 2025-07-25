@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "../context/useTheme";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const HomeIcon = (props) => (
   <svg

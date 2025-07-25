@@ -49,6 +49,7 @@ const BookTable = () => {
       book.authors.toLowerCase().includes(search)
     );
   });
+  const [currentPageData, setCurrentPageData] = useState([]);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 5,
@@ -183,6 +184,12 @@ const BookTable = () => {
     setPagination((prev) => ({ ...prev, current: 1 }));
   }, [filteredBooks]);
 
+  useEffect(() => {
+    const startIndex = (pagination.current - 1) * pagination.pageSize;
+    const endIndex = startIndex + pagination.pageSize;
+    setCurrentPageData(filteredBooks.slice(startIndex, endIndex));
+  }, [filteredBooks, pagination]);
+
   const columns = [
     {
       title: "Thumbnail",
@@ -274,12 +281,22 @@ const BookTable = () => {
         dataSource={filteredBooks}
         loading={loading}
         pagination={{
-          current: pagination.current,
           pageSize: pagination.pageSize,
+          total: filteredBooks.length,
           showSizeChanger: true,
           pageSizeOptions: ["3", "5", "10"],
           onChange: (page, pageSize) => {
-            setPagination({ current: page, pageSize });
+            setPagination((prev) => ({
+              ...prev,
+              current: page,
+              pageSize: pageSize,
+            }));
+          },
+          onShowSizeChange: (current, size) => {
+            setPagination({
+              current: 1,
+              pageSize: size,
+            });
           },
         }}
         className={`rounded-lg ${theme === "dark" ? "dark" : ""} ${

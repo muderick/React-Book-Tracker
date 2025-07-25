@@ -3,6 +3,7 @@ import axios from "axios";
 export const useUpdate = (url) => {
   const updateData = async (id, updates) => {
     try {
+      // const res = await axios.put(url, updates);
       const existing = JSON.parse(localStorage.getItem("cachedbooks")) || [];
       const index = existing.findIndex((book) => book.key === id);
 
@@ -11,8 +12,8 @@ export const useUpdate = (url) => {
       const updatedBook = {
         ...existing[index],
         ...updates,
-        thumbnail: updates.thumbnail || existing[index].thumbnail
-      }
+        thumbnail: updates.thumbnail || existing[index].thumbnail,
+      };
 
       const updatedBooks = [...existing];
       updatedBooks[index] = updatedBook;
