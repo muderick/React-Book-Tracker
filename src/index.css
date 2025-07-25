@@ -166,3 +166,26 @@ textarea::placeholder {
 .dark .ant-table-thead th.ant-table-column-has-sorters:hover {
   background-color: #374151 !important; /* Match your hover color */
 }
+
+.dark .ant-table-thead > tr > th.ant-table-column-sort {
+  background-color: #2d3748 !important; /* Slightly lighter than main bg */
+}
+
+.dark .ant-table-thead > tr > th.ant-table-column-sort:hover {
+  background-color: #3c4557 !important; /* Hover state */
+}
+
+.dark .ant-table-tbody .ant-table-cell.ant-table-column-sort {
+    background-color: #2d3748;
+}
+
+/* Active sorted column icon color */
+.dark .ant-table-column-sorter-up.active,
+.dark .ant-table-column-sorter-down.active {
+  color: #63b3ed !important; /* Light blue for better contrast */
+}
+
+/* Fix sorted column text color */
+.dark .ant-table-column-sort .ant-table-cell {
+  color: #e2e8f0 !important; /* Light text for better contrast */
+}

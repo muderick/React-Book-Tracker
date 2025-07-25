@@ -49,6 +49,10 @@ const BookTable = () => {
       book.authors.toLowerCase().includes(search)
     );
   });
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+  });
 
   useEffect(() => {
     const fetchBooks = () => {
@@ -175,6 +179,10 @@ const BookTable = () => {
     };
   }, []);
 
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, current: 1 }));
+  }, [filteredBooks]);
+
   const columns = [
     {
       title: "Thumbnail",
@@ -266,11 +274,15 @@ const BookTable = () => {
         dataSource={filteredBooks}
         loading={loading}
         pagination={{
-          pageSize: 5,
+          current: pagination.current,
+          pageSize: pagination.pageSize,
           showSizeChanger: true,
           pageSizeOptions: ["3", "5", "10"],
+          onChange: (page, pageSize) => {
+            setPagination({ current: page, pageSize });
+          },
         }}
-        className={`rounded-lg ${theme === "dark" ? "dark" : "light"} ${
+        className={`rounded-lg ${theme === "dark" ? "dark" : ""} ${
           theme === "dark"
             ? "bg-gray-800 [&_td]:bg-gray-800 [&_th]:bg-gray-800 [&_tr]:border-gray-700 text-gray-100 [&_td]:text-gray-100 [&_th]:text-gray-100"
             : "bg-white [&_td]:bg-white [&_th]:bg-white text-gray-800 [&_td]:text-gray-800 [&_th]:text-gray-800"
