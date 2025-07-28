@@ -7,9 +7,10 @@ import "antd/dist/reset.css";
 import { ThemeProvider } from "./context/useTheme";
 import "@ant-design/v5-patch-for-react-19";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faMoon, faSun } from "@fortawesome/free-regular-svg-icons";
+import { faHome, faMoon, faSun } from "@fortawesome/free-regular-svg-icons";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faMoon, faSun);
+library.add(faMoon, faSun, faHome, faInfoCircle);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
