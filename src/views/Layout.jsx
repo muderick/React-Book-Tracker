@@ -9,10 +9,6 @@ import { Toaster } from "react-hot-toast";
 const { Header, Content, Footer, Sider } = Layout;
 const { useBreakpoint } = Grid;
 
-const layoutStyle = {
-  minHeight: "100vh",
-};
-
 const PageLayout = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md; // true if screen is < 768px

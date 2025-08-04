@@ -7,14 +7,13 @@ import { useUpdate } from "../hooks/useUpdate";
 import toast from "react-hot-toast";
 import { usePost } from "../hooks/usePost";
 import { useTheme } from "../context/useTheme";
+import BookForm from "./BookForm";
+import { Link, useNavigate } from "react-router-dom";
+import { render } from "@testing-library/react";
+import ReusableButton from "./ReusableButton";
 const { Search } = Input;
 
 const LOCAL_STORAGE_KEY = "cachedbooks";
-
-const initialForm = {
-  title: "",
-  authors: "",
-};
 
 const BookTable = () => {
   const { theme } = useTheme();
@@ -23,17 +22,17 @@ const BookTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const base_URL = `https://www.googleapis.com/books/v1/volumes?q=${searchTerm}`;
-  const { data, loading, error } = useFetch(base_URL);
+  const { data, loading } = useFetch(base_URL);
   const [books, setBooks] = useState(() => {
     try {
       const savedBooks = localStorage.getItem(LOCAL_STORAGE_KEY);
       return savedBooks ? JSON.parse(savedBooks) : [];
     } catch (error) {
-      console.error("Failed to set books");
+      console.error("Failed to set books", error);
       return [];
     }
   });
-  const { updateData, updateError } = useUpdate();
+  const { updateData } = useUpdate();
   const [editingId, setEditingId] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [showEditingModal, setShowEditingmodal] = useState(false);
@@ -49,35 +48,47 @@ const BookTable = () => {
       book.authors.toLowerCase().includes(search)
     );
   });
-  const [currentPageData, setCurrentPageData] = useState([]);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 5,
   });
+  const navigate = useNavigate();
+  const [showConfirmModal, setConfirmModal] = useState(false);
+  const [bookToDelete, setBookToDelete] = useState(null);
 
   useEffect(() => {
     const fetchBooks = () => {
       if (data) {
         const items = data.items || [];
 
+        const toHttps = (url) =>
+          typeof url === "string" ? url.replace(/^http:\/\//, "https://") : url;
+
         const formattedBooks = items
           .filter((item) => item != null)
           .map((item) => {
             const volume = item.volumeInfo;
             let thumbnail =
-              volume.imageLinks?.thumbnail ||
+              toHttps(volume.imageLinks?.thumbnail) ||
               "https://via.placeholder.com/80x120?text=No+Image";
-
-            if (thumbnail.startsWith("http://")) {
-              thumbnail = thumbnail.replace("http://", "https://");
-            }
 
             return {
               key: item.id,
               title: volume.title || "No Title",
+              subtitle: volume.subtitle || "No Subtitle",
               thumbnail,
-
+              industryIdentifiers: volume.industryIdentifiers,
               authors: volume.authors?.join(", ") || "Unknown",
+              previewLink: toHttps(volume.previewLink),
+              infoLink: toHttps(volume.infoLink),
+              averageRating: volume.averageRating,
+              ratingCount: volume.ratingCount,
+              publisher: volume.publisher,
+              publishedDate: volume.publishedDate,
+              language: volume.language,
+              pageCount: volume.pageCount,
+              description: volume.description,
+              categories: volume.categories,
             };
           })
           .filter((book) => book != null);
@@ -90,7 +101,7 @@ const BookTable = () => {
     fetchBooks();
   }, [data]);
 
-  const onSearch = (value, _e, info) => {
+  const onSearch = (value, _e) => {
     const searchValue = value.trim().split(" ").join("+");
 
     setSearchTerm(searchValue);
@@ -98,11 +109,34 @@ const BookTable = () => {
 
   const handleDelete = async (id) => {
     if (!id) return;
-    await deleteData(id);
-    const updatedBooks = books.filter((book) => book.key !== id);
-    setBooks(updatedBooks);
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedBooks));
-    console.log(updatedBooks);
+    try {
+      await deleteData(id);
+      const updatedBooks = books.filter((book) => book.key !== id);
+      setBooks(updatedBooks);
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedBooks));
+      console.log(updatedBooks);
+    } catch (error) {
+      console.log(error.message);
+      toast.error("Unable to delete book: ", error.message);
+    }
+  };
+
+  const handleConfirmDelete = (record) => {
+    setBookToDelete(record);
+    setConfirmModal(true);
+  };
+
+  const closeConfirmModal = () => {
+    setConfirmModal(false);
+    setBookToDelete(null);
+  };
+
+  const handleDeleteConfirmed = () => {
+    if (bookToDelete) {
+      handleDelete(bookToDelete.key);
+    }
+
+    closeConfirmModal();
   };
 
   const handleEditClick = (book) => {
@@ -135,10 +169,9 @@ const BookTable = () => {
     }
   }, [showEditingModal]);
 
-  //   const handleChange = (e) => {
-  //     const { name, value } = e.target;
-  //     setForm((prev) => ({ ...prev, [name]: value }));
-  //   };
+  const handleViewLocation = (book) => {
+    navigate("/book-details-location", { state: book });
+  };
 
   const handleSubmit = async (values) => {
     try {
@@ -180,15 +213,14 @@ const BookTable = () => {
     };
   }, []);
 
-  useEffect(() => {
-    setPagination((prev) => ({ ...prev, current: 1 }));
-  }, [filteredBooks]);
-
-  useEffect(() => {
-    const startIndex = (pagination.current - 1) * pagination.pageSize;
-    const endIndex = startIndex + pagination.pageSize;
-    setCurrentPageData(filteredBooks.slice(startIndex, endIndex));
-  }, [filteredBooks, pagination]);
+  const bookFormProps = {
+    isEditMode,
+    showEditingModal,
+    titleInput,
+    handleModalClose,
+    form,
+    handleSubmit,
+  };
 
   const columns = [
     {
@@ -202,6 +234,9 @@ const BookTable = () => {
       dataIndex: "title",
       key: "title",
       sorter: (a, b) => a.title.localeCompare(b.title),
+      render: (_, record) => (
+        <Link to={`book-details-params/${record.key}`}>{record.title}</Link>
+      ),
     },
     {
       title: "Author(s)",
@@ -216,8 +251,13 @@ const BookTable = () => {
         if (!record) return null;
         return (
           <Space size="middle">
-            <button onClick={() => handleEditClick(record)}>Edit</button>
-            <button onClick={() => handleDelete(record.key)}>Delete</button>
+            <ReusableButton
+              title="Edit"
+              classes={['px-3', 'rounded', 'border', 'border-solid', 'border-black', 'hover:bg-blue-600', 'hover:text-white', 'hover:border-transparent']}
+              onClick={() => handleEditClick(record)}
+            />
+            <ReusableButton title="Delete" onClick={() => handleConfirmDelete(record)} />
+            <ReusableButton title="Details" onClick={() => handleViewLocation(record)} />
           </Space>
         );
       },
@@ -309,97 +349,42 @@ const BookTable = () => {
         }}
       />
 
-      {showEditingModal ? (
-        <Modal
-          title={isEditMode ? "Edit Book" : "Add New Book"}
-          open={showEditingModal}
-          onCancel={handleModalClose}
-          footer={null}
-          className={`${theme === "dark" ? "dark-modal dark" : "light"}`}
-          styles={{
-            content: {
-              background: theme === "dark" ? "#1f2937" : "#fff",
-              color: theme === "dark" ? "#f9fafb" : "#111827",
-            },
-            header: {
-              background: theme === "dark" ? "#1f2937" : "#fff",
-              borderColor: theme === "dark" ? "#374151" : "#d1d5db",
-            },
-          }}
+      {showEditingModal ? <BookForm {...bookFormProps} /> : null}
+      <Modal
+        title="Confirm Deletion"
+        open={showConfirmModal}
+        onCancel={closeConfirmModal}
+        footer={null}
+      >
+        <span
+          className={`${theme === "light" ? "text-gray-800" : "text-white"}`}
         >
-          <Form
-            form={form}
-            className="space-y-4"
-            onFinish={handleSubmit}
-            initialValues={{ title: "", authors: "" }}
+          Are you sure you want to delete <strong>{bookToDelete?.title}</strong>
+        </span>
+
+        <div className="flex justify-end gap-4">
+          <button
+            onClick={closeConfirmModal}
+            className={`px-4 py-2 rounded hover:cursor-pointer ${
+              theme === "light"
+                ? "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                : "bg-gray-600 hover:bg-gray-700 text-white"
+            }`}
           >
-            <Form.Item
-              name="title"
-              rules={[{ required: true, message: "Please enter book title" }]}
-            >
-              <Input
-                type="text"
-                name="title"
-                ref={titleInput}
-                style={{
-                  background: theme === "dark" ? "#111827" : "#fff",
-                  color: theme === "dark" ? "#f9fafb" : "#111827",
-                  borderColor: theme === "dark" ? "#374151" : "#d1d5db",
-                }}
-                className="w-full p-2 rounded-lg"
-                placeholder="Book Title"
-                allowClear
-                required
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="authors"
-              rules={[
-                { required: true, message: "Please enter author name(s)" },
-              ]}
-            >
-              <Input
-                type="text"
-                name="authors"
-                style={{
-                  background: theme === "dark" ? "#111827" : "#fff",
-                  color: theme === "dark" ? "#f9fafb" : "#111827",
-                  borderColor: theme === "dark" ? "#374151" : "#d1d5db",
-                }}
-                placeholder="Author Name(s)"
-                allowClear
-                required
-              />
-            </Form.Item>
-
-            <div className="flex justify-end space-x-3 pt-2">
-              <button
-                type="button"
-                onClick={handleModalClose}
-                className={`px-4 py-2 rounded hover:cursor-pointer ${
-                  theme === "light"
-                    ? "bg-gray-200 hover:bg-gray-300 text-gray-800"
-                    : "bg-gray-600 hover:bg-gray-700 text-white"
-                }`}
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                className={`px-4 py-2 text-white rounded hover:cursor-pointer ${
-                  theme === "light"
-                    ? "bg-green-600 hover:bg-green-700"
-                    : "bg-green-700 hover:bg-green-800"
-                }`}
-              >
-                {isEditMode ? "Update" : "Create"}
-              </button>
-            </div>
-          </Form>
-        </Modal>
-      ) : null}
+            Cancel
+          </button>
+          <button
+            onClick={handleDeleteConfirmed}
+            className={`px-4 py-2 text-white rounded hover:cursor-pointer ${
+              theme === "light"
+                ? "bg-red-600 hover:bg-red-700"
+                : "bg-red-700 hover:bg-red-800"
+            }`}
+          >
+            Delete
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };

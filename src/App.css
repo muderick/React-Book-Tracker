@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Global styles for dark mode */
+body.dark .ant-modal {
+  background-color: #1f2937 !important; /* Dark background */
+}
+
+body.dark .ant-modal-content {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+body.dark .ant-modal-footer {
+  background-color: #1f2937 !important;
+}
+
+body.dark .ant-modal-header {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+body.dark .ant-btn-primary {
+  background-color: #4CAF50; /* Or any custom primary button color */
+  border-color: #4CAF50;
+}
+
+body.dark .ant-btn:hover {
+  background-color: #333 !important; /* Change button hover color */
+}

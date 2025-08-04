@@ -7,20 +7,14 @@ export const useFetch = (url) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let isMounted = true;
-
     const fetchData = async () => {
       try {
         const res = await axios.get(url);
-        if (isMounted) {
-          setData(res.data);
-          setLoading(false);
-        }
+        setData(res.data);
+        setLoading(false);
       } catch (error) {
-        if (isMounted) {
-          setError(error);
-          setLoading(false);
-        }
+        setError(error);
+        setLoading(false);
       }
     };
 
