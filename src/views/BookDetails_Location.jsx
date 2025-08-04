@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useLocation } from "react-router-dom";
 import { useTheme } from "../context/useTheme";
 import { Button, Col, Row, Tag, Typography } from "antd";
