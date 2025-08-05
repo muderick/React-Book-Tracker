@@ -4,8 +4,8 @@ import PageLayout from "./views/Layout";
 import Home from "./views/Home";
 import About from "./views/About";
 import NotFound from "./views/NotFound";
-import BookDetailsLocation from "./views/BookDetails_Location";
-import BookDetails_Params from "./views/BookDetails_Params";
+import BookDetailsLocation from "./views/BookDetailsLocation";
+import BookDetailsParams from "./views/BookDetailsParams";
 
 function App() {
   return (
@@ -18,7 +18,10 @@ function App() {
             path="/book-details-location"
             element={<BookDetailsLocation />}
           />
-          <Route path="/book-details-params/:id" element={<BookDetails_Params />} />
+          <Route
+            path="/book-details-params/:id"
+            element={<BookDetailsParams />}
+          />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

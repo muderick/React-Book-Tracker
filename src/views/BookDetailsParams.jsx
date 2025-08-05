@@ -15,7 +15,7 @@ import { useFetch } from "../hooks/useFetch";
 const { Title, Text, Paragraph } = Typography;
 const base_URL = "https://www.googleapis.com/books/v1/volumes";
 
-const BookDetails_Params = () => {
+const BookDetailsParams = () => {
   let { id } = useParams("");
   const { data, loading } = useFetch(`${base_URL}/${id}`);
   const [book, setBook] = useState({});
@@ -384,4 +384,4 @@ const content = <div style={contentStyle} />;
   );
 };
 
-export default BookDetails_Params;
+export default BookDetailsParams;
