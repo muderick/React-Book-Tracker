@@ -44,9 +44,11 @@ const BookDetailsPage = () => {
     return authors; // Handle string case
   };
 
-  const categoriesArray = Array.isArray(book.categories)
-    ? typeof book.categories === "string"
-      ? book.categories
+  const categoriesArray = book.categories
+    ? Array.isArray(book.categories)
+      ? book.categories.flatMap((cat) =>
+          typeof cat === "string" ? cat.split("/").map((s) => s.trim()) : cat
+        )
       : [book.categories]
     : ["General"];
 
@@ -62,7 +64,7 @@ const BookDetailsPage = () => {
             isDark ? "text-gray-400" : "text-gray-500"
           }`}
         >
-          Books / {categoriesArray} / {book.title}
+          Books / {categoriesArray.join(" / ")} / {book.title}
         </Text>
 
         {/* Main Content */}
@@ -260,7 +262,7 @@ const BookDetailsPage = () => {
                 </div>
 
                 {/* Categories */}
-                {categoriesArray && (
+                {categoriesArray.length > 0 && (
                   <div className="mb-6">
                     <Text
                       strong

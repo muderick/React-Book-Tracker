@@ -95,24 +95,24 @@ const BookDetailsParams = () => {
     return authors; // Handle string case
   };
 
-  const categoriesArray = Array.isArray(book.categories)
-    ? typeof book.categories === "string"
-      ? book.categories
+  const categoriesArray = book.categories
+    ? Array.isArray(book.categories)
+      ? book.categories.flatMap((cat) =>
+          typeof cat === "string" ? cat.split("/").map((s) => s.trim()) : cat
+        )
       : [book.categories]
     : ["General"];
 
   const contentStyle = {
-  padding: 50,
-  borderRadius: 4,
-};
+    padding: 50,
+    borderRadius: 4,
+  };
 
-const content = <div style={contentStyle} />;
+  const content = <div style={contentStyle} />;
 
   return loading ? (
     <div className="min-h-screen w-full flex justify-center items-center">
-      <Spin tip="Data loading...">
-        {content}
-      </Spin>
+      <Spin tip="Data loading...">{content}</Spin>
     </div>
   ) : (
     <div
@@ -126,7 +126,7 @@ const content = <div style={contentStyle} />;
             isDark ? "text-gray-400" : "text-gray-500"
           }`}
         >
-          Books / {categoriesArray} / {book.title}
+          Books / {categoriesArray.join(" / ")} / {book.title}
         </Text>
 
         {/* Main Content */}
@@ -217,16 +217,12 @@ const content = <div style={contentStyle} />;
                           className={`text-lg ${
                             i < Math.floor(book.averageRating)
                               ? "text-yellow-500"
-                              : isDark
-                              ? "text-gray-600"
                               : "text-gray-300"
                           }`}
                         />
                       ))}
                     </div>
-                    <Text
-                      className={isDark ? "text-gray-400" : "text-gray-500"}
-                    >
+                    <Text className="text-gray-500">
                       {book.averageRating} ({book.ratingsCount || "No"} ratings)
                     </Text>
                   </div>
@@ -324,7 +320,7 @@ const content = <div style={contentStyle} />;
                 </div>
 
                 {/* Categories */}
-                {categoriesArray && (
+                {categoriesArray.length > 0 && (
                   <div className="mb-6">
                     <Text
                       strong
