@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTheme } from "../context/useTheme";
 import { Button, Col, Row, Spin, Tag, Typography } from "antd";

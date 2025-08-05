@@ -1,4 +1,3 @@
-import React from "react";
 import TopBar from "./TopBar";
 
 const HeaderComponent = ({theme, toggleTheme}) => {
