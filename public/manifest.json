@@ -1,6 +1,6 @@
 {
-  "short_name": "Book Tracker",
   "name": "Book Tracker App",
+  "short_name": "Book Tracker",
   "icons": [
     {
       "src": "./images/book-solid-full.ico",
@@ -10,16 +10,11 @@
     {
       "src": "./images/book-solid-full.png",
       "type": "image/png",
-      "sizes": "192x192"
-    },
-    {
-      "src": "./images/book-solid-full.png",
-      "type": "image/png",
-      "sizes": "1024x1024"
+      "sizes": "640x640"
     }
   ],
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#10b981",
-  "background_color": "##1f2937"
+  "background_color": "#1f2937"
 }
