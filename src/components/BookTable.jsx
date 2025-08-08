@@ -123,7 +123,6 @@ const BookTable = () => {
 
   useEffect(() => {
     const handleOnline = () => {
-      message.success("You're back online! Books are now synced");
       syncLocalDataToServer();
     };
 
