@@ -1,4 +1,4 @@
-import { Button, Form, Image, Modal, Space, Table } from "antd";
+import { Button, Form, Image, message, Modal, Space, Table } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { Input } from "antd";
@@ -56,14 +56,14 @@ const BookTable = () => {
   const [bookToDelete, setBookToDelete] = useState(null);
 
   useEffect(() => {
-    const fetchBooks = () => {
-      if (data) {
-        const items = data.items || [];
+    if (!navigator.onLine) return;
 
+    const fetchBooks = () => {
+      if (data && data.items && data.items.length > 0) {
         const toHttps = (url) =>
           typeof url === "string" ? url.replace(/^http:\/\//, "https://") : url;
 
-        const formattedBooks = items
+        const formattedBooks = data.items
           .filter((item) => item != null)
           .map((item) => {
             const volume = item.volumeInfo;
@@ -89,8 +89,7 @@ const BookTable = () => {
               description: volume.description,
               categories: volume.categories,
             };
-          })
-          .filter((book) => book != null);
+          });
 
         setBooks(formattedBooks);
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(formattedBooks));
@@ -100,10 +99,86 @@ const BookTable = () => {
     fetchBooks();
   }, [data]);
 
+  useEffect(() => {
+    const handleOnlineStatus = () => {
+      if (navigator.onLine) {
+        // Show online notification
+        message.success("You're back online! Books are now synced");
+
+        // Sync local data
+        const pendingUpdates =
+          JSON.parse(localStorage.getItem("pendingUpdates")) || [];
+        if (pendingUpdates.length > 0) {
+          syncLocalDataToServer(pendingUpdates);
+        }
+      }
+    };
+
+    window.addEventListener("online", handleOnlineStatus);
+
+    return () => {
+      window.removeEventListener("online", handleOnlineStatus);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      message.success("You're back online! Books are now synced");
+      syncLocalDataToServer();
+    };
+
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+    };
+  }, []);
+
+  const syncLocalDataToServer = () => {
+    const pendingUpdates =
+      JSON.parse(localStorage.getItem("pendingUpdates")) || [];
+    if (pendingUpdates.length === 0) return;
+
+    pendingUpdates.forEach((update) => {
+      // Use your updateData hook for each pending update
+      updateData(update.id, update.data)
+        .then((updatedBook) => {
+          if (updatedBook) {
+            // Remove successful update from pending
+            const newPending = pendingUpdates.filter(
+              (item) =>
+                !(
+                  item.id === update.id &&
+                  JSON.stringify(item.data) === JSON.stringify(update.data)
+                )
+            );
+            localStorage.setItem("pendingUpdates", JSON.stringify(newPending));
+          }
+        })
+        .catch((error) => {
+          console.error("Sync failed:", error);
+        });
+    });
+  };
+
   const onSearch = (value, _e) => {
     const searchValue = value.trim().split(" ").join("+");
 
-    setSearchTerm(searchValue);
+    if (navigator.onLine) {
+      setSearchTerm(searchValue);
+    } else if (value) {
+      const found = books.some(
+        (book) =>
+          book.title.toLowerCase().includes(value.toLowerCase()) ||
+          book.authors.toLowerCase().includes(value.toLowerCase())
+      );
+
+      if (!found) {
+        message.info(
+          "No books found in local cache. Connect to internet to search."
+        );
+      }
+    }
   };
 
   const handleDelete = async (id) => {
@@ -252,11 +327,26 @@ const BookTable = () => {
           <Space size="middle">
             <ReusableButton
               title="Edit"
-              classes={['px-3', 'rounded', 'border', 'border-solid', 'border-black', 'hover:bg-blue-600', 'hover:text-white', 'hover:border-transparent']}
+              classes={[
+                "px-3",
+                "rounded",
+                "border",
+                "border-solid",
+                "border-black",
+                "hover:bg-blue-600",
+                "hover:text-white",
+                "hover:border-transparent",
+              ]}
               onClick={() => handleEditClick(record)}
             />
-            <ReusableButton title="Delete" onClick={() => handleConfirmDelete(record)} />
-            <ReusableButton title="Details" onClick={() => handleViewLocation(record)} />
+            <ReusableButton
+              title="Delete"
+              onClick={() => handleConfirmDelete(record)}
+            />
+            <ReusableButton
+              title="Details"
+              onClick={() => handleViewLocation(record)}
+            />
           </Space>
         );
       },

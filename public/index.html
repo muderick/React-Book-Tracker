@@ -11,11 +11,8 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Book PWA Tracker"
-    />
-    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Book PWA Tracker" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
@@ -31,14 +28,24 @@
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("./serviceworker.js")
-            .then((reg) =>
-              console.log("ServiceWorker registered successfully: ", reg.scope)
-            )
-            .catch((error) =>
-              console.error("ServiceWorker registration failed.", error)
-            );
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            for (let registration of registrations) {
+              registration.unregister();
+            }
+
+            // Then register the new service worker
+            navigator.serviceWorker
+              .register("./serviceworker.js")
+              .then((reg) =>
+                console.log(
+                  "ServiceWorker registered successfully: ",
+                  reg.scope
+                )
+              )
+              .catch((error) =>
+                console.error("ServiceWorker registration failed.", error)
+              );
+          });
         });
       }
     </script>

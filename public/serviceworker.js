@@ -5,8 +5,12 @@ const urlsToCache = [
   "/index.html",
   `/${OFFLINE_URL}`,
   "/manifest.json",
-  "/logo192.png",
-  "/favicon.ico",
+  "/images/book-solid-full.png",
+  "/images/book-solid-full.ico",
+  "/main.js",
+  "/styles.css",
+  "/about",
+  "/book-details-location",
 ];
 
 const self = this;
@@ -39,47 +43,79 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
-// self.addEventListener('fetch', (event) => {
-//   // Skip non-HTTP(s) requests (like chrome-extension://)
-//   if (!event.request.url.startsWith('http')) {
-//     return;
-//   }
-
-//   event.respondWith(
-//     caches.open('my-cache').then((cache) => {
-//       return fetch(event.request)
-//         .then((response) => {
-//           cache.put(event.request, response.clone());
-//           return response;
-//         })
-//         .catch(() => caches.match(event.request));
-//     })
-//   );
-// });
-
-// Listen for requests
+// Listen for fetch events
 self.addEventListener("fetch", (event) => {
-  if (!event.request.url.startsWith("http")) {
+  if (!event.request.url.startsWith("http")) return;
+  if (event.request.method !== "GET") return;
+
+  const requestUrl = new URL(event.request.url);
+
+  // Handle API requests separately
+  if (requestUrl.origin === "https://www.googleapis.com") {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => networkResponse)
+        .catch(() => {
+          console.log("[SW] Offline - returning fallback empty books");
+          // Return empty response for API failures
+          return new Response(JSON.stringify({ items: [] }), {
+            headers: { "Content-Type": "application/json" },
+          });
+        })
+    );
     return;
   }
+
+  // Handle navigation requests
   if (event.request.mode === "navigate") {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match(OFFLINE_URL))
+      fetch(event.request)
+        .then((response) => {
+          // Cache fresh response
+          const responseClone = response.clone();
+          caches
+            .open(CACHE_NAME)
+            .then((cache) => cache.put(event.request, responseClone));
+          return response;
+        })
+        .catch(() => {
+          return caches
+            .match(event.request)
+            .then(
+              (cachedResponse) => cachedResponse || caches.match(OFFLINE_URL)
+            );
+        })
     );
-  } else {
-    event.respondWith(
-      caches.match(event.request).then((response) => {
-        return (
-          response ||
-          fetch(event.request).then((res) => {
-            return caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, res.clone());
-
-              return res;
-            });
-          })
-        );
-      })
-    );
+    return;
   }
+
+  // Handle all other requests
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      // Return cached version if available
+      if (cachedResponse) return cachedResponse;
+
+      // Fetch from network and cache
+      return fetch(event.request)
+        .then((networkResponse) => {
+          if (!networkResponse || networkResponse.status !== 200) {
+            return networkResponse;
+          }
+
+          const responseClone = networkResponse.clone();
+          caches
+            .open(CACHE_NAME)
+            .then((cache) => cache.put(event.request, responseClone));
+
+          return networkResponse;
+        })
+        .catch(() => {
+          // Return offline fallbacks
+          if (event.request.destination === "image") {
+            return caches.match("/images/book-solid-full.png");
+          }
+          return new Response("Offline");
+        });
+    })
+  );
 });
