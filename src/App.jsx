@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import PageLayout from "./views/Layout";
 import Home from "./views/Home";
@@ -6,54 +6,37 @@ import About from "./views/About";
 import NotFound from "./views/NotFound";
 import BookDetailsLocation from "./views/BookDetailsLocation";
 import BookDetailsParams from "./views/BookDetailsParams";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const OnlineStatusHandler = () => {
-  const location = useLocation();
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
   useEffect(() => {
-    const handleOnline = () => {
-      if (document.getElementById("offline-indicator")) {
-        document.getElementById("offline-indicator").style.display = "none";
-      }
-    };
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
 
-    const handleOffline = () => {
-      let indicator = document.getElementById("offline-indicator");
-
-      if (!indicator) {
-        indicator = document.createElement("div");
-        indicator.id = "offline-indicator";
-        indicator.style.cssText = `
-          position: fixed;
-          bottom: 20px;
-          right: 20px;
-          padding: 10px 15px;
-          background: #ff4d4f;
-          color: white;
-          border-radius: 4px;
-          z-index: 1000;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        `;
-        indicator.textContent = "You're offline - working in offline mode";
-        document.body.appendChild(indicator);
-      } else {
-        indicator.style.display = "block";
-      }
-    };
-
-    if (!navigator.online) handleOffline();
-
+    // Event listeners for online/offline events
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
+    // Clean up event listeners on component unmount
     return () => {
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
-  }, [location]);
+  }, []);
 
-  return null;
+  return (
+    isOffline && (
+      <div
+        id="offline-indicator"
+        className="fixed font-sans bottom-5 right-5 px-[15px] py-[10px] bg-[#ff4d4f] text-white rounded z-[1000] shadow-sm "
+      >
+        You're offline - Some featueres may not be
+        available.
+      </div>
+    )
+  );
 };
 
 function App() {

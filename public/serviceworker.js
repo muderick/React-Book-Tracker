@@ -114,7 +114,7 @@ self.addEventListener("fetch", (event) => {
           if (event.request.destination === "image") {
             return caches.match("/images/book-solid-full.png");
           }
-          return new Response("Offline");
+          return new Response("Offline", {status: 503});
         });
     })
   );
