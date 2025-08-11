@@ -1,4 +1,5 @@
-const CACHE_NAME = "book-tracker-cache-v1";
+const CACHE_VERSION = "v2";
+const CACHE_NAME = `book-tracker-cache-${CACHE_VERSION}`;
 const OFFLINE_URL = "offline.html";
 const urlsToCache = [
   "/",
@@ -17,6 +18,8 @@ const self = this;
 
 // Install SW
 self.addEventListener("install", (event) => {
+  self.skipWaiting();
+
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       console.log("[Service Worker] Caching offline resources");
@@ -24,21 +27,26 @@ self.addEventListener("install", (event) => {
       return cache.addAll(urlsToCache);
     })
   );
-  self.skipWaiting();
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 // Activate the SW
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) =>
-      Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            return caches.delete(cache);
-          }
-        })
+    caches
+      .keys()
+      .then((cacheNames) =>
+        Promise.all(
+          cacheNames
+            .filter((cache) => cache !== CACHE_NAME)
+            .map((cache) => caches.delete(cache))
+        )
       )
-    )
   );
   self.clients.claim();
 });
@@ -114,7 +122,7 @@ self.addEventListener("fetch", (event) => {
           if (event.request.destination === "image") {
             return caches.match("/images/book-solid-full.png");
           }
-          return new Response("Offline", {status: 503});
+          return new Response("Offline", { status: 503 });
         });
     })
   );

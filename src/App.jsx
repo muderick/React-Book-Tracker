@@ -15,28 +15,42 @@ const OnlineStatusHandler = () => {
     const handleOnline = () => setIsOffline(false);
     const handleOffline = () => setIsOffline(true);
 
-    // Event listeners for online/offline events
+    // Initial double-check after component mounts
+    const checkOnlineStatus = async () => {
+      if (!navigator.onLine) {
+        try {
+          await fetch(window.location.origin, {
+            method: "HEAD",
+            cache: "no-store",
+          });
+          setIsOffline(false);
+        } catch {
+          setIsOffline(true);
+        }
+      }
+    };
+
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    // Clean up event listeners on component unmount
+    // Add delay to ensure network status stabilizes
+    const timer = setTimeout(checkOnlineStatus, 500);
+
     return () => {
+      clearTimeout(timer);
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
-  return (
-    isOffline && (
-      <div
-        id="offline-indicator"
-        className="fixed font-sans bottom-5 right-5 px-[15px] py-[10px] bg-[#ff4d4f] text-white rounded z-[1000] shadow-sm "
-      >
-        You're offline - Some featueres may not be
-        available.
-      </div>
-    )
-  );
+  return isOffline ? (
+    <div
+      id="offline-indicator"
+      className="fixed font-sans bottom-5 right-5 px-[15px] py-[10px] bg-[#ff4d4f] text-white rounded z-[1000] shadow-sm "
+    >
+      You're offline - Some featueres may not be available.
+    </div>
+  ) : null;
 };
 
 function App() {

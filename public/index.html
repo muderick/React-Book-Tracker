@@ -27,26 +27,28 @@
     <div id="root"></div>
     <script>
       if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker.getRegistrations().then((registrations) => {
-            for (let registration of registrations) {
-              registration.unregister();
-            }
+        navigator.serviceWorker
+          .register("./serviceworker.js")
+          .then((reg) => {
+            console.log("ServiceWorker registered: ", reg.scope);
 
-            // Then register the new service worker
-            navigator.serviceWorker
-              .register("./serviceworker.js")
-              .then((reg) =>
-                console.log(
-                  "ServiceWorker registered successfully: ",
-                  reg.scope
-                )
-              )
-              .catch((error) =>
-                console.error("ServiceWorker registration failed.", error)
-              );
+            reg.onupdatefound = () => {
+              const newWorker = reg.installing;
+              newWorker.onstatechange = () => {
+                if (
+                  newWorker.state === "installed" &&
+                  navigator.serviceWorker.controller
+                ) {
+                  console.log("New service worker found, activating...");
+                  newWorker.postMessage({ type: "SKIP_WAITING" });
+                  window.location.reload();
+                }
+              };
+            };
+          })
+          .catch((error) => {
+            console.error("ServiceWorker registration failed.", error);
           });
-        });
       }
     </script>
   </body>
